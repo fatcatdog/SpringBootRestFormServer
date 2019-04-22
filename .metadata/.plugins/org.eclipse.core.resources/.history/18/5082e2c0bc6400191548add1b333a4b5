@@ -1,0 +1,78 @@
+package com.example.demo.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.model.FormData;
+import com.example.demo.model.User;
+import com.example.demo.repository.FormDataRepo;
+
+@Service
+public class FormDataService {
+
+	@Autowired
+	FormDataRepo formDataDao;
+	
+	@Autowired
+	UserService userService;
+	
+	public FormData getForm(int id) {
+		return formDataDao.getForm(id);
+	}
+	
+	public boolean saveForm(FormData formData, String email, String password) {
+		
+		
+		try {
+			User user = userService.getUser(email, password);
+			
+			if (user != null) {
+
+				formData.setUserId(user.getId());
+			} 
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		try{
+			formDataDao.saveForm(formData);
+			return true;
+		} catch (Exception e) {
+			return false; 
+		}
+	}
+	
+	public int getUserIdFromUserUpdatedFormId(int id) {
+		User user = userService.getUser(id);
+		
+		return user.getId(); 
+	}
+	
+	public boolean updateForm(FormData formData, String email, String password) {
+		
+		try {
+			User user = userService.getUser(email, password);
+			
+			
+			if(getUserIdFromUserUpdatedFormId(formData.getUserId()) != user.getId()) {
+				System.out.println("Hacker alert");
+				return false;
+			}
+		
+			if (user != null) {
+				formData.setUserId(user.getId());
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		try{
+			formDataDao.updateForm(formData);
+		} catch (Exception e) {
+			return false; 
+		}
+	}
+		
+}

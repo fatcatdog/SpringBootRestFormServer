@@ -1,0 +1,81 @@
+package com.example.demo.controller;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.model.FormData;
+import com.example.demo.model.User;
+import com.example.demo.service.FormDataService;
+import com.example.demo.valueObject.IncomingForm;
+
+@RestController
+@RequestMapping("/forms")
+public class MainController {
+	
+	  
+	  @Autowired
+	  private FormDataService formDataService;
+	
+	  @PostMapping("/create")
+	  public ResponseEntity<?> createForm(@Valid @RequestBody IncomingForm incomingForm) {
+		  
+		  FormData tempForm = new FormData(); 
+		  User tempUser = new User(); 
+		  
+		  try {
+			  tempForm.setAnswerQuestion1(incomingForm.getAnswerQuestion1());
+			  tempForm.setAnswerQuestion2(incomingForm.getAnswerQuestion2());
+			  tempForm.setAnswerQuestion3(incomingForm.getAnswerQuestion3());
+			  tempForm.setAnswerQuestion4(incomingForm.getAnswerQuestion4());
+		 
+			  tempUser.setEmail(incomingForm.getEmail());
+			  tempUser.setPassword(incomingForm.getPassword());
+		  } catch(Exception e) {
+			  System.out.println("Bad json recived for create form");
+		  }
+		 
+		  try {
+			  if(formDataService.saveForm(tempForm, "duchen@gmail.com", "1234")) {
+				  System.out.println("formDataService.saveForm succcess");
+			  } else {
+				  System.out.println("formDataService.saveForm fail");
+			  }
+	    		return new ResponseEntity<>("Save form endpoint success", HttpStatus.OK);
+		  } catch (Exception e) {
+	    		return new ResponseEntity<>("Save form end point failed", HttpStatus.BAD_REQUEST);
+		  }
+	  }
+	  
+	    @GetMapping("/{id}")
+	    public ResponseEntity<?> getForm(@PathVariable int id){
+	    	try {
+	    		FormData tempForm = formDataService.getForm(id);
+	    		return new ResponseEntity<>(tempForm, HttpStatus.OK);	
+	    	} catch(Exception e) {
+	    		return new ResponseEntity<>("Get form end point failed", HttpStatus.BAD_REQUEST);
+	    	}
+	    }
+	   
+	    @PostMapping("/update/{id}")
+	    public ResponseEntity<?> updateForm(@PathVariable int id, @RequestBody FormData formData,@RequestBody String email, @RequestBody String password){
+	    	try {
+	    		if (formData.getId() != id) {
+		    		return new ResponseEntity<>("Update form end point failed because of hacker...", HttpStatus.BAD_REQUEST);
+	    		}
+	    		formDataService.updateForm(formData, email, password);
+	    		return new ResponseEntity<>(HttpStatus.OK);	
+	    	} catch(Exception e) {
+	    		return new ResponseEntity<>("Update form end point failed", HttpStatus.BAD_REQUEST);
+	    	}
+	    }
+
+}

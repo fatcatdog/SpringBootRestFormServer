@@ -1,0 +1,26 @@
+package com.example.demo.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.model.FormData;
+import com.example.demo.repository.FormDataRepo;
+
+@Service
+public class FormDataService {
+
+	@Autowired
+	FormDataRepo formDataDao;
+	
+	public boolean saveForm(FormData formData) {
+		formDataDao.saveForm(formData);
+		
+	}
+	
+	public boolean updateForm(FormData formData) {
+
+	}
+	
+		
+}

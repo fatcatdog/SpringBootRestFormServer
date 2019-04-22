@@ -1,0 +1,58 @@
+package com.example.demo.repository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.demo.model.FormData;
+
+@Transactional
+@Repository
+public class FormDataRepo {
+	
+    private final JdbcTemplate jdbcTemplate;
+    
+    @Autowired
+    public FormDataRepo(JdbcTemplate jdbcTemplate) {
+	  this.jdbcTemplate = jdbcTemplate;
+    }
+
+	public FormData getForm(int id) {
+    	String sql = "SELECT id, userId, answerQuestion1, answerQuestion2, answerQuestion3, answerQuestion4 FROM FormData WHERE id = ?";
+    	RowMapper<FormData> rowMapper = new BeanPropertyRowMapper<FormData>(FormData.class);
+    	FormData formData = jdbcTemplate.queryForObject(sql, rowMapper, id);
+    	return formData;
+	}
+
+	public boolean saveForm(FormData formData) {
+		   String sql = "INSERT INTO FormData (id, userId, answerQuestion1, answerQuestion2, answerQuestion3, answerQuestion4) values (?, ?, ?, ?, ?, ?)";
+		   int tempFormId = getANewId();
+		   try {
+
+			   jdbcTemplate.update(sql, tempFormId, formData.getUserId(), formData.getAnswerQuestion1(), formData.getAnswerQuestion2(), formData.getAnswerQuestion3(), formData.getAnswerQuestion4());
+			   return true;
+		   } catch(Exception e) {
+			   System.out.println("Bad");
+			   return false;
+		   }
+	}
+	
+	public boolean updateForm(FormData formData) {
+		String sql = "UPDATE FormData SET answerQuestion1=?, answerQuestion2=?, answerQuestion3=?, answerQuestion4=? WHERE id=?";
+		try {
+			jdbcTemplate.update(sql, formData.getAnswerQuestion1(), formData.getAnswerQuestion2(), formData.getAnswerQuestion3(), formData.getAnswerQuestion4());
+			return true; 
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	 public int getANewId() {
+		 String sql = "SELECT MAX(id) from FormData";
+		 Integer number = jdbcTemplate.queryForObject(sql, Integer.class);
+		 return (number + 1);
+	 }
+}

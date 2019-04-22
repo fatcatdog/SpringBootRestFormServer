@@ -1,0 +1,23 @@
+package com.example.demo.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepo;
+
+@Service
+public class UserService {
+
+	@Autowired
+	UserRepo userDao; 
+	
+    public User getUser(String email, String password) {
+    	try {
+    		userDao.getUser(email, password);
+    	} catch (Exception e) {
+    		System.out.println("UserService getUser fail");
+    	}
+    }
+   
+}

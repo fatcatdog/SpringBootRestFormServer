@@ -1,0 +1,39 @@
+package com.example.demo.repository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.demo.model.FormData;
+
+@Transactional
+@Repository
+public class FormDataRepo {
+	
+    private final JdbcTemplate jdbcTemplate;
+    
+    @Autowired
+    public FormDataRepo(JdbcTemplate jdbcTemplate) {
+	  this.jdbcTemplate = jdbcTemplate;
+    }
+
+	public FormData getForm(int id) {
+    	String sql = "SELECT id, userId, answerQuestion1, answerQuestion2, answerQuestion3, answerQuestion4 FROM FormData WHERE id = ?";
+    	RowMapper<FormData> rowMapper = new BeanPropertyRowMapper<FormData>(FormData.class);
+    	FormData formData = jdbcTemplate.queryForObject(sql, rowMapper, id);
+    	return formData;
+	}
+	
+
+	public boolean saveForm(FormData formData) {
+		
+	}
+	
+	public boolean updateForm(FormData formData) {
+		
+	}
+	
+}

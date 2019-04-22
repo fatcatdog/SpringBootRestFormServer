@@ -1,0 +1,62 @@
+package com.example.demo.controller;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.model.FormData;
+import com.example.demo.service.FormDataService;
+import com.example.demo.service.UserService;
+
+@RestController
+@RequestMapping("/forms")
+public class MainController {
+	
+	  @Autowired
+	  private UserService userService;
+	  
+	  @Autowired
+	  private FormDataService formDataService;
+	
+	  @PostMapping("/create")
+	  public ResponseEntity<?> createForm(@Valid @RequestBody FormData tempForm, @RequestBody String email, @RequestBody String password) {
+		
+		  try {
+			  formDataService.saveForm(tempForm, email, password);
+	    		return new ResponseEntity<>("Save form endpoint success", HttpStatus.OK);
+		  } catch (Exception e) {
+	    		return new ResponseEntity<>("Update form end point failed", HttpStatus.BAD_REQUEST);
+		  }
+		
+	  }
+	  
+	    @GetMapping("/{id}")
+	    public ResponseEntity<?> getForm(@PathVariable int id){
+	    	try {
+	    		FormData tempForm = formDataService.getForm(id);
+	    		return new ResponseEntity<>(tempForm, HttpStatus.OK);	
+	    	} catch(Exception e) {
+	    		return new ResponseEntity<>("Get form end point failed", HttpStatus.BAD_REQUEST);
+	    	}
+	    }
+	   
+	    @PostMapping("/{update}")
+	    public ResponseEntity<?> updateForm(@PathVariable FormData formData, String email, String password){
+	    	try {
+	    		formDataService.updateForm(formData, email, password);
+	    		return new ResponseEntity<>(HttpStatus.OK);	
+	    	} catch(Exception e) {
+	    		return new ResponseEntity<>("Update form end point failed", HttpStatus.BAD_REQUEST);
+	    	}
+	    	
+	    }
+
+}
