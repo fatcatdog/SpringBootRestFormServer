@@ -37,9 +37,10 @@ public class MainController {
 		  System.out.println("password: " + password);
 
 		  if(email.length() > 1 && password.length() > 1) {
-		  		return new ResponseEntity<>("valid email and user request", HttpStatus.OK);
+		  		return new ResponseEntity<>("tryLogin method hit", HttpStatus.OK);
 		  } else {
-	    		return new ResponseEntity<>("not valid", HttpStatus.BAD_REQUEST);
+	    		return new ResponseEntity<>("Save form end point failed", HttpStatus.BAD_REQUEST);
+
 		  }
 
 	  }

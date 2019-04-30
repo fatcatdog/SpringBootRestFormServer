@@ -30,17 +30,10 @@ public class MainController {
 	  @CrossOrigin(origins = "http://localhost:3000")
 	  public ResponseEntity<?> tryLogin(@Valid @RequestBody User user) {
 	
-		  String email = user.getEmail();
-		  String password = user.getPassword();
-		  
-		  System.out.println("email: " + email);
-		  System.out.println("password: " + password);
+		  System.out.println("email: " + user.getEmail());
+		  System.out.println("password: " + user.getPassword());
 
-		  if(email.length() > 1 && password.length() > 1) {
-		  		return new ResponseEntity<>("valid email and user request", HttpStatus.OK);
-		  } else {
-	    		return new ResponseEntity<>("not valid", HttpStatus.BAD_REQUEST);
-		  }
+  		return new ResponseEntity<>("tryLogin method hit", HttpStatus.OK);
 
 	  }
 	  

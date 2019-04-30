@@ -5,7 +5,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,26 +25,6 @@ public class MainController {
 	  @Autowired
 	  private FormDataService formDataService;
 	
-	  @PostMapping("/login")
-	  @CrossOrigin(origins = "http://localhost:3000")
-	  public ResponseEntity<?> tryLogin(@Valid @RequestBody User user) {
-	
-		  String email = user.getEmail();
-		  String password = user.getPassword();
-		  
-		  System.out.println("email: " + email);
-		  System.out.println("password: " + password);
-
-		  if(email.length() > 1 && password.length() > 1) {
-		  		return new ResponseEntity<>("valid email and user request", HttpStatus.OK);
-		  } else {
-	    		return new ResponseEntity<>("not valid", HttpStatus.BAD_REQUEST);
-		  }
-
-	  }
-	  
-	  
-	  
 	  @PostMapping("/create")
 	  public ResponseEntity<?> createForm(@Valid @RequestBody IncomingForm incomingForm) {
 		  

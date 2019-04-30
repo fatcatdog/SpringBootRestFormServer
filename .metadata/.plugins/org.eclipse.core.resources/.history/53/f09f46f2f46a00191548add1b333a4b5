@@ -36,11 +36,8 @@ public class MainController {
 		  System.out.println("email: " + email);
 		  System.out.println("password: " + password);
 
-		  if(email.length() > 1 && password.length() > 1) {
-		  		return new ResponseEntity<>("valid email and user request", HttpStatus.OK);
-		  } else {
-	    		return new ResponseEntity<>("not valid", HttpStatus.BAD_REQUEST);
-		  }
+		  if()
+  		return new ResponseEntity<>("tryLogin method hit", HttpStatus.OK);
 
 	  }
 	  
